@@ -76,10 +76,10 @@ const dict: Record<string, any> = {
         rejected: "Ditolak",
         bulkFailMsg1: "Potongan RM",
         bulkFailMsg2: "gagal. Ahli baki kurang:",
-        getHtml: "Dapatkan Kod HTML",
-        copyHtml: "Salin Kod HTML",
+        getHtml: "Cara Publish Web",
+        copyHtml: "Salin Panduan",
         copied: "Berjaya Disalin!",
-        embedCode: "Kod Embed HTML",
+        embedCode: "Panduan Publish Web",
         viewTransactions: "Rekod Transaksi",
         months: {
             'Januari': 'Januari', 'Februari': 'Februari', 'Mac': 'Mac', 'April': 'April',
@@ -151,10 +151,10 @@ const dict: Record<string, any> = {
         rejected: "Rejected",
         bulkFailMsg1: "Deduction of RM",
         bulkFailMsg2: "failed. Members with insufficient balance:",
-        getHtml: "Get HTML Code",
-        copyHtml: "Copy HTML Code",
+        getHtml: "How to Publish",
+        copyHtml: "Copy Guide",
         copied: "Copied successfully!",
-        embedCode: "HTML Embed Code",
+        embedCode: "Web Publish Guide",
         viewTransactions: "Transaction Records",
         months: {
             'Januari': 'January', 'Februari': 'February', 'Mac': 'March', 'April': 'April',
@@ -417,22 +417,14 @@ export default function App() {
     };
 
     const getEmbedHtml = () => {
-        const publicUrl = window.location.href.replace('-dev-', '-pre-');
-        return `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Simpanan Ahli</title>
-    <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #111314; }
-        iframe { width: 100%; height: 100%; border: none; }
-    </style>
-</head>
-<body>
-    <iframe src="${publicUrl}" allow="clipboard-write"></iframe>
-</body>
-</html>`;
+        return `Makluman Penting:
+Anda tidak boleh menggunakan kod <iframe> untuk memaparkan sistem ini di laman web lain (seperti GitHub Pages) kerana wujud sekatan keselamatan pelayan (X-Frame-Options) untuk mengelakkan godaman.
+
+Untuk publish di GitHub Pages:
+1. Tekan menu tetapan (Settings / gear icon) pada panel AI Studio.
+2. Pilih "Export to GitHub" atau muat turun kod dalam bentuk ZIP.
+3. Anda perlu jalankan perintah pembinaan (npm run build) pada komputer anda.
+4. Muat naik (upload) fail dari folder 'dist' ke repositori GitHub anda.`;
     };
 
     const handleCopyHtml = () => {
