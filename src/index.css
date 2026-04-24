@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+body { 
+    font-family: 'Poppins', sans-serif; 
+    -webkit-tap-highlight-color: transparent; 
+}
+
+.animate-blob { animation: blob 15s infinite; }
+@keyframes blob { 0%, 100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.15); opacity: 0.6; } }
+
+.animate-shake { animation: shake 0.4s ease-in-out; }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }

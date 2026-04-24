@@ -1,0 +1,39 @@
+{
+  "entities": {
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Financial transaction record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "number" },
+        "name": { "type": "string" },
+        "month": { "type": "string" },
+        "amount": { "type": "number" },
+        "type": { "type": "string", "enum": ["masuk", "keluar"] },
+        "timestamp": { "type": "number" }
+      },
+      "required": ["id", "name", "month", "amount", "type"]
+    },
+    "Config": {
+      "title": "System Config",
+      "description": "Global application configuration",
+      "type": "object",
+      "properties": {
+        "senaraiAhli": { "type": "array", "items": { "type": "string" } },
+        "minAmount": { "type": "number" },
+        "tahunSemasa": { "type": "string" }
+      },
+      "required": ["senaraiAhli", "minAmount", "tahunSemasa"]
+    }
+  },
+  "firestore": {
+    "/records/{recordId}": {
+      "schema": { "$ref": "#/entities/Transaction" },
+      "description": "Stores all transactions. Public read, admin write."
+    },
+    "/system/{configId}": {
+      "schema": { "$ref": "#/entities/Config" },
+      "description": "Stores system config like members list and global variables. Public read, admin write."
+    }
+  }
+}

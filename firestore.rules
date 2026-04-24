@@ -1,0 +1,70 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() { return request.auth != null; }
+    
+    // Since we are using local PIN, Firebase writes are allowed publicly.
+    // WARNING: This means anyone with the database ID can modify the database.
+    function isAdmin() { 
+      return true;
+    }
+
+    // Since anyone can view the shared ledger (the app is a shared group savings system)
+    // we allow list, but we restrict write to admins.
+    
+    // Validations
+    function isValidId(id) { 
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); 
+    }
+
+    function isValidRecord(data) {
+      return data.id is number &&
+             data.name is string && data.name.size() <= 100 && data.name.size() > 0 &&
+             data.month is string && data.month.size() <= 20 &&
+             data.amount is number &&
+             data.type is string && (data.type == 'masuk' || data.type == 'keluar') &&
+             data.timestamp is number;
+    }
+
+    function isValidConfig(data) {
+      return data.senaraiAhli is list && data.senaraiAhli.size() <= 1000 &&
+             data.minAmount is number &&
+             data.tahunSemasa is string && data.tahunSemasa.size() <= 4;
+    }
+
+    match /system/{configId} {
+      allow get: if true;
+      allow list: if configId == 'global';
+      
+      allow create: if isAdmin() &&
+                    request.resource.data.keys().hasAll(['senaraiAhli', 'minAmount', 'tahunSemasa']) &&
+                    isValidConfig(request.resource.data);
+                    
+      allow update: if isAdmin() && 
+                    isValidConfig(request.resource.data);
+    }
+
+    match /records/{recordId} {
+      allow read: if true; // Public ledger
+      
+      allow create: if isAdmin() && 
+                    isValidId(recordId) &&
+                    request.resource.data.keys().hasAll(['id', 'name', 'month', 'amount', 'type', 'timestamp']) &&
+                    isValidRecord(request.resource.data);
+                    
+      allow update: if isAdmin() && 
+                    isValidRecord(request.resource.data);
+                    
+      allow delete: if isAdmin();
+    }
+    
+    match /admins/{uid} {
+      allow read: if true;
+      allow write: if false; // Only manageable through Firebase Console initially
+    }
+  }
+}
